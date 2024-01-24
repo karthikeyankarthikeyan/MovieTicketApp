@@ -1,0 +1,321 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+class User{
+    private String username;
+    private String email;
+    //private String password;
+    
+     public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    public void displayInfo() {
+        System.out.println("Username: " + username);
+        System.out.println("Email: " + email);
+    }
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    // public String getPassword() {
+    //     return password;
+    // }
+     public boolean login(String enteredUsername, String enteredEmail) {
+        return enteredUsername.equals(username) && enteredEmail.equals(email);
+    }
+}
+class Admin extends User {
+    private String adminName;
+
+    public Admin(String username, String email, String adminName) {
+        super(username, email);
+        this.adminName = adminName;
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Admin Level: " + adminName);
+    }
+}
+
+class Customer extends User {
+    private int loyaltyPoints;
+
+    public Customer(String username, String email, int loyaltyPoints) {
+        super(username, email);
+        this.loyaltyPoints = loyaltyPoints;
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Loyalty Points: " + loyaltyPoints);
+    }
+}
+
+interface Displayable {
+    void displayDetails();
+}
+
+class Movie implements Displayable {
+    private String movieName;
+    private String genre;
+    private int duration;
+    private static List<Movie> availableMovies = new ArrayList<>();
+
+    public Movie(String movieName, String genre, int duration) {
+        this.movieName = movieName;
+        this.genre = genre;
+        this.duration = duration;
+
+        availableMovies.add(this);
+    }
+
+    public String getMovieName() {
+        return movieName;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public static List<Movie> getAvailableMovies() {
+        return availableMovies;
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Movie: " + getMovieName());
+        System.out.println("Genre: " + getGenre());
+        System.out.println("Total Duration: " + getDuration());
+    }
+
+    public static void displayAllAvailableMovies() {
+        System.out.println("\nAvailable Movies:");
+        for (Movie movie : availableMovies) {
+            movie.displayDetails();
+            System.out.println("------------------------");
+        }
+    }
+}
+
+class Theatre implements Displayable {
+    private String theatreName;
+    private String location;
+    private static List<Theatre> availableTheatres = new ArrayList<>();
+
+    public Theatre(String theatreName, String location) {
+        this.theatreName = theatreName;
+        this.location = location;
+
+        availableTheatres.add(this);
+    }
+
+    public String getTheatreName() {
+        return theatreName;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public static List<Theatre> getAvailableTheatres() {
+        return availableTheatres;
+    }
+
+    @Override
+    public void displayDetails() {
+        System.out.println("Theatre: " + getTheatreName());
+        System.out.println("Location: " + getLocation());
+    }
+
+    public static void displayAllAvailableTheatres() {
+        System.out.println("\nAvailable Theatres:");
+        for (Theatre theatre : availableTheatres) {
+            theatre.displayDetails();
+            System.out.println("------------------------");
+        }
+    }
+}
+
+class Booking {
+    private String customerName;
+    private Movie selectedMovie;
+    private Theatre selectedTheatre;
+    private int numSeats;
+
+    public Booking(String customerName, Movie selectedMovie, Theatre selectedTheatre, int numSeats) {
+        this.customerName = customerName;
+        this.selectedMovie = selectedMovie;
+        this.selectedTheatre = selectedTheatre;
+        this.numSeats = numSeats;
+    }
+
+    public void displayBookingDetails() {
+        System.out.println("Customer: " + customerName);
+        System.out.println("Movie: " + selectedMovie.getMovieName());
+        System.out.println("Theatre: " + selectedTheatre.getTheatreName() + ", Location: " + selectedTheatre.getLocation());
+        System.out.println("Seats booked: " + numSeats);
+    }
+}
+
+class Payment {
+    // Add your payment-related logic here
+}
+
+public class Main {
+    public static void main(String[] args) {
+        
+        System.out.println("Welcome to the Movie Theater System!");
+        
+        //User user1 = new User("karthi", "karthi@gmail.com");
+        //user1.displayInfo();
+
+        Admin admin1 = new Admin("sanjay", "sanjay@gmail.com", "High");
+       // admin1.displayInfo();
+
+        Customer customer1 = new Customer("deepa", "deepa@gmail.com", 100);
+        //customer1.displayInfo();
+
+        Movie movie1 = new Movie("Inception", "Science Fiction", 148);
+        Movie movie2 = new Movie("The Shawshank Redemption", "Drama", 142);
+
+        Theatre theatre1 = new Theatre("Cineplex 1", "Downtown");
+        Theatre theatre2 = new Theatre("MovieTown 2", "Suburb");
+
+        while (true) {
+            System.out.println("\nOptions:");
+            System.out.println("1. login");
+            System.out.println("2. Display Available Movies");
+            System.out.println("3. Display Available Theatres");
+            System.out.println("4. Book Seats");
+            System.out.println("5. Payment Options");
+            //System.out.println("5. Make Payment");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+
+            Scanner sc = new Scanner(System.in);
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 2:
+                    Movie.displayAllAvailableMovies();
+                    break;
+                case 3:
+                    Theatre.displayAllAvailableTheatres();
+                    break;
+                case 4:
+                    System.out.print("Enter the movie number to book seats: ");
+                    int movieChoice = sc.nextInt();
+                    Movie selectedMovie = Movie.getAvailableMovies().get(movieChoice - 1);
+
+                    System.out.print("Enter the theatre number to book seats: ");
+                    int theatreChoice = sc.nextInt();
+                    Theatre selectedTheatre = Theatre.getAvailableTheatres().get(theatreChoice - 1);
+
+                    System.out.print("Enter customer name: ");
+                    String customerName = sc.next();
+
+                    System.out.print("Enter the number of seats to book: ");
+                    int numSeats = sc.nextInt();
+
+                    System.out.println("\nReview Booking: ");
+
+                    if (numSeats > 0) {
+                        if (selectedMovie != null && selectedTheatre != null) {
+                            Booking booking = new Booking(customerName, selectedMovie, selectedTheatre, numSeats);
+                            booking.displayBookingDetails();
+                        } else {
+                            System.out.println("Invalid movie or theatre selection.");
+                        }
+                    } else {
+                        System.out.println("Number of seats should be greater than 0.");
+                    }
+                    break;
+                case 5:
+                   //case 4:
+                        
+                    System.out.println("Payment Options:");
+                    System.out.println(" 1. Card");
+                    System.out.println(" 2. Cash");
+    
+    //Scanner scanner = new Scanner(System.in);
+                    System.out.println("Select payment option (1 or 2): ");
+    Scanner scanner = new Scanner(System.in);
+    int paymentOption = scanner.nextInt();
+    
+    System.out.println("Pay for booking ");
+     Scanner sca = new Scanner(System.in);
+     int rupees = sca.nextInt();
+    
+    
+     if (paymentOption == 1) {
+            System.out.println("Pay through card:");
+        if(rupees == 200){
+            System.out.println("Succesfully Swiped");
+        }
+        else{
+            System.out.println("Invalid amount");
+        }
+}
+        else if (paymentOption == 2) {
+        
+        //System.out.print("Enter the amount in : ");
+            //int rupees = sca.nextInt();
+
+            if (rupees == 200) {
+                System.out.println("\nCash payment successful for 200 rupees.");
+            } else {
+                System.out.println("Cash payment unsuccessful. Amount does not match.");
+            }
+        }
+        else {
+            System.out.println("Invalid payment option. Exiting the payment process.");
+        }
+         System.out.println("\nBooking Succesfully Completed:");
+            
+        break;
+            
+                case 6:
+                    System.out.println("Thank you See you ASAP!!.");
+                    System.exit(0);
+                    break;
+                    
+                case 1:
+                Scanner scan = new Scanner(System.in);
+                System.out.print("Enter your username: ");
+                String enteredUsername = scan.next();
+
+                System.out.print("Enter your email: ");
+                String enteredEmail = scan.next();
+
+                if (customer1.login(enteredUsername, enteredEmail)) {
+                   System.out.println("Customer Login successful!");
+                  } else if (admin1.login(enteredUsername, enteredEmail)) {
+                    System.out.println("Admin Login successful!");
+                 } else {
+                  System.out.println("Login failed. Invalid username or email.");
+                 }
+
+                break;
+            
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
+
